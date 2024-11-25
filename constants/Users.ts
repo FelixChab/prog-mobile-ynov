@@ -1,18 +1,22 @@
-export const Users = {
-  user1: {
+export const Users = [
+  {
     name: "John Pork",
-    password: "1234"
+    password: "1234",
   },
-  user2: {
+  {
     name: "John Minecraft",
-    password: "5678"
+    password: "1234",
   },
-  user3: {
-    name: "Johnny John Joe",
-    password: "john"
+  {
+    name: "John Roblox",
+    password: "1234",
   },
-  user4: {
-    name: "?",
-    password: "!"
-  }
-}
+  {
+    name: "John John",
+    password: "1234",
+  },
+  {
+    name: "Johnny Piggy",
+    password: "5678",
+  },
+]

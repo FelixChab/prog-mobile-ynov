@@ -9,7 +9,7 @@ import Game from '@/components/Game';
 
 export default function MainApp(isAuthenticated: boolean) {
 
-  const test = useAuth();
+  const User = useAuth();
   const Stack = createNativeStackNavigator();
   const colorScheme = useColorScheme();
 

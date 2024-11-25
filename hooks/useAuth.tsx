@@ -1,37 +1,28 @@
 import React, { useContext, useState } from 'react';
 import { Users } from '@/constants/Users';
 
-const AuthContext = React.createContext('dark');
-
-export const useAuth = () => {
-  return useContext(AuthContext);
+interface User {
+  name: string;
+  password: string;
 }
 
 interface AuthProviderProps {
   children: React.ReactNode;
 }
 
-interface User {
-  name: string;
-  password: string;
-}
+const AuthContext = React.createContext<User>(Users[1]);
 
-interface AuthContextType {
-  user: User;
-  signIn: (name: string, password: string) => Promise<void>;
-  signout: () => void;
-  register: (name: string, password: string) => Promise<void>;
-  loadingRetrieve: boolean;
-  isAuthenticated: boolean;
+export const useAuth = () => {
+  return useContext(AuthContext);
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState(null);
+  const [session, setSession] = useState(null);
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [firstTime, setFirstTime] = useState(true);
   const [loadingRetrieve, setOnloadingRetrieve] = useState(false);
-  const isAuthenticated = useState(false);
 
   // Connexion
   const signIn = async (name: string, password: string) => {
@@ -59,8 +50,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     signout,
     register,
     loadingRetrieve,
-    isAuthenticated
   }
 
-  return <AuthContext.Provider value={"dark"}>{children}</AuthContext.Provider>
+  return (
+    <AuthContext.Provider value={Users[1]}>{children}</AuthContext.Provider>
+  )
 }
