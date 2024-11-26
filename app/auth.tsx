@@ -1,29 +1,29 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet } from "react-native";
-import { Users } from "../constants/Users";
 import { Alert } from "react-native";
+import { router } from "expo-router";
+import { useSession } from "../components/AuthProvider";
 
-export default function AuthScreen({ onLogin }: { onLogin: (username: string, password: string) => void }) {
-  const [username, setUsername] = useState("")
-  const [password, setPassword] = useState("")
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
+export default function AuthScreen() {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  
+  const { signIn } = useSession();
 
   // Gestion de la connexion
   const handleLogin = (username: string, password: string) => {
-    const user = Users.find(
-      (user) => user.name === username && user.password === password
-    )
-    // L'utilisateur existe donc se connecte
-    if (user) {
-      setIsAuthenticated(true)
-      Alert.alert("Connexion réussie", `Bienvenue, ${user.name}!`)
-      console.log(user.name + " Connecté !")
-    } else {
-      // TODO première connexion
+   
+    const error = signIn(username, password); // Car signIn() ne retourne rien sauf une erreur s'il y en a une
+
+    // Si on reçois un message d'erreur lors de la connexion...
+    if (error === null) {
       Alert.alert("Erreur", "Nom d’utilisateur ou mot de passe incorrect.")
-      console.log("Aucun utilisateur trouvé !")
+      console.log("[ERR] Aucun utilisateur trouvé !")
+    } else {
+      // L'utilisateur existe donc se connecte, redirection
+      signIn(username, password)
+      router.replace("/")
     }
-    return isAuthenticated
   }
 
   // Rendu composants

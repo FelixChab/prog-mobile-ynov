@@ -1,8 +1,9 @@
 import { useContext, createContext, type PropsWithChildren } from "react";
 import { useStorageState } from "@/hooks/useStorageState";
+import { Users } from "../constants/Users";
 
 const AuthContext = createContext<{
-  signIn: () => void
+  signIn: (username: string, password: string) => void
   signOut: () => void
   session?: string | null
   isLoading: boolean
@@ -18,24 +19,32 @@ export function useSession() {
   const value = useContext(AuthContext);
   if (process.env.NODE_ENV !== "production") {
     if (!value) {
-      throw new Error("useSession must be wrapped in a <SessionProvider />")
+      throw new Error("useSession must be wrapped in a <SessionProvider />");
     }
   }
 
-  return value
+  return value;
 }
 
 export function SessionProvider({ children }: PropsWithChildren) {
-  const [[isLoading, session], setSession] = useStorageState("session");
+  const [[isLoading, session], setSession] = useStorageState("");
 
   return (
     <AuthContext.Provider
       value={{
-        signIn: () => {
-          setSession("xxx");
+        signIn: (username, password) => {
+          const user = Users.find((user) => user.name === username && user.password === password);
+          if (!user) {
+            // TODO: gestion erreur si l'utilsateur n'existe pas
+            return null;
+          } else {
+            setSession(user.id);
+          } 
         },
         signOut: () => {
-          setSession(null);
+          if (session) {
+            setSession(null);
+          }
         },
         session,
         isLoading
