@@ -7,7 +7,7 @@ export default function GameScreen() {
   // Rendu composants
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Jeu</Text>
+      <Text style={styles.title}>I have a mouth so I must scream</Text>
     </View>
   )
 }

@@ -3,7 +3,7 @@ import { View, Text, TextInput, Button, StyleSheet } from "react-native";
 import { Users } from "../constants/Users";
 import { Alert } from "react-native";
 
-export default function LoginScreen({ onLogin }: { onLogin: (username: string, password: string) => void }, authenticated: boolean) {
+export default function AuthScreen({ onLogin }: { onLogin: (username: string, password: string) => void }) {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -29,7 +29,7 @@ export default function LoginScreen({ onLogin }: { onLogin: (username: string, p
   // Rendu composants
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Connexion</Text>
+      <Text style={styles.title}>Authentification</Text>
       <TextInput
         placeholder="Nom d'utilisateur"
         value={username}
@@ -43,12 +43,9 @@ export default function LoginScreen({ onLogin }: { onLogin: (username: string, p
         secureTextEntry
         style={styles.input}
       />
-      <Button
-        title={authenticated ? "Connexion" : "Inscription"}
-        onPress={() => onLogin(username, password)}
-      />
+      <Button title="Jouer" onPress={() => handleLogin(username, password)} />
     </View>
-  )
+  );
 }
 
 // Style CSS
