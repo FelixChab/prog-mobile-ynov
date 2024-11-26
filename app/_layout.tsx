@@ -26,10 +26,10 @@ export default function RootLayout() {
 
   // Redirection composants
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+    <ThemeProvider value={colorScheme === "light" ? DarkTheme : DefaultTheme}>
       <Stack>
         <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="not-found" />
+        <Stack.Screen name="+not-found" options={{ headerShown: false }} />
         <StatusBar style="auto" />
       </Stack>
     </ThemeProvider>

@@ -1,7 +1,7 @@
 import * as React from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Auth from '../components/Auth';
-import Game from '../components/Game';
+import Game from '../components/GameScreen';
 import Leaderboard from '../components/Leaderboard';
 
 // Navigation

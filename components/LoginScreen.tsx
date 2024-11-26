@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 
 export default function LoginScreen({onLogin}: {onLogin: (username: string, password: string) => void}) {
-  const [username, setUsername] = useState("")
-  const [password, setPassword] = useState("")
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
   // Rendu composants
   return (
@@ -29,15 +29,15 @@ export default function LoginScreen({onLogin}: {onLogin: (username: string, pass
 }
 
 // Style CSS
-export const styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",
     fontWeight: "bold",
-    color: "white",
+    color: "black"
   },
   title: {
     color: "black",
     fontWeight: "bold",
     fontSize: 30,
   }
-})
+});
