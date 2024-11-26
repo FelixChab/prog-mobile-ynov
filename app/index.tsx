@@ -1,36 +1,54 @@
-import * as React from 'react-native';
-import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, Alert } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { Users } from '@/constants/Users';
+import Game from '@/components/Game';
+import LoginScreen from '@/components/LoginScreen';
 
 
-export default function MainApp(isAuthenticated: boolean) {
+export default function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const Stack = createNativeStackNavigator();
 
-  //const user = useAuth();
-  const Stack = createNativeStackNavigator()
+  // Gestion de la connexion
+  const handleLogin = (username: string, password: string) => {
+    const user = Users.find((user) => user.name === username && user.password === password);
+    // L'utilisateur existe donc se connecte
+    if (user) {
+      setIsAuthenticated(true)
+      Alert.alert("Connexion réussie", `Bienvenue, ${user.name}!`)
+      console.log(user.name + " Connecté !")
+    } else {
+      Alert.alert("Erreur", "Nom d’utilisateur ou mot de passe incorrect.")
+      console.log("Aucun utilisateur trouvé !")
+    }
+  }
 
+  // Rendu composants
   return (
-    <View>
-      test
+    <View style={styles.container}>
+      <Stack.Navigator>
+        {!isAuthenticated ? (
+          <Stack.Screen name="Login" options={{ headerShown: false }}>
+            {() => <LoginScreen onLogin={handleLogin} />}
+          </Stack.Screen>
+        ) : (
+          <Stack.Screen
+            name="Game"
+            options={{ headerShown: false }}
+            component={Game}
+          />
+        )}
+      </Stack.Navigator>
     </View>
   )
 }
 
-// Styles CSS
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
+// Style CSS
+export const styles = StyleSheet.create({
+  container: {
+    backgroundColor: "white",
+    fontWeight: "bold",
+    color: "white"
+  }
 });

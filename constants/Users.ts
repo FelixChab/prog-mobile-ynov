@@ -24,4 +24,9 @@ export const Users = [
     name: "Johnny Piggy",
     password: "5678",
   },
+  {
+    id: 6,
+    name: "test",
+    password: "test",
+  }
 ]
