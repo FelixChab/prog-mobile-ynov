@@ -1,32 +1,17 @@
 import * as React from 'react-native';
-import { StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { AuthProvider, useAuth } from '@/hooks/useAuth';
-import { useColorScheme } from '@/hooks/useColorScheme';
-import Auth from '@/components/Auth';
-import Game from '@/components/Game';
 
 
 export default function MainApp(isAuthenticated: boolean) {
 
-  const User = useAuth();
-  const Stack = createNativeStackNavigator();
-  const colorScheme = useColorScheme();
+  //const user = useAuth();
+  const Stack = createNativeStackNavigator()
 
   return (
-    <AuthProvider>
-      {isAuthenticated ? (
-        <Game></Game>
-      ) : (
-        <Stack.Navigator>
-          <Stack.Screen
-            options={{ headerShown: false }}
-            name="Auth"
-            component={Auth}
-          />
-        </Stack.Navigator>
-      )}
-    </AuthProvider>
+    <View>
+      test
+    </View>
   )
 }
 
