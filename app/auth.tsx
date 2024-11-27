@@ -36,12 +36,6 @@ export default function AuthScreen() {
     router.replace("/game");
   }
 
-  const checkPassword = (password: string, pwd: string) => {
-    if (password === pwd) {
-      setPassword(pwd);
-    }
-  }
-
   // Rendu composants
   return (
     <View style={styles.container}>

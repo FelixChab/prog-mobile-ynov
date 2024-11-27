@@ -9,7 +9,7 @@ export default function Index() {
   // Rendu composants page
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text style={{ color: "green" }}>Vous êtes connecté !</Text>
+      <Text style={{ color: "green", marginBottom: 10 }}>Vous êtes connecté !</Text>
       <Button
         title="Jouer"
         onPress={() => {
