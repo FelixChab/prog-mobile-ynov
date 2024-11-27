@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
+import React from "react";
+import { View, Text, StyleSheet } from "react-native";
 import { Image } from "expo-image";
 
 export default function GameScreen() {

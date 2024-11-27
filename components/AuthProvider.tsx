@@ -1,7 +1,6 @@
 import { useContext, createContext, type PropsWithChildren } from "react";
 import { useStorageState } from "@/hooks/useStorageState";
 import { Users } from "../constants/Users";
-import * as Crypto from "expo-crypto";
 
 // Contexte d'authentification
 const AuthContext = createContext<{
@@ -63,7 +62,6 @@ export function SessionProvider({ children }: PropsWithChildren) {
           const user = Users.find((user) => user.name === username && user.password === password);
           if (!user) {
             const newId = (Users.length + 1).toString(); // Nouvel ID (à vérif)
-            //const crypto = Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, newId);
             const newUser = {
               id: newId,
               name: username,

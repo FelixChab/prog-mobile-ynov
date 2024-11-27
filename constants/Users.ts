@@ -1,3 +1,4 @@
+// Tableau d'Users pré-définis, à remplacer par Firebase
 export const Users = [
   {
     id: "1",

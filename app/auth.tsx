@@ -4,6 +4,7 @@ import { Alert } from "react-native";
 import { router } from "expo-router";
 import { useSession } from "../components/AuthProvider";
 
+// Ecran et logique d'authentification à l'aide du AuthProvider
 export default function AuthScreen() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
