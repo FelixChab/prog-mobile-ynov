@@ -1,13 +1,24 @@
-import React, { useState } from "react"
-import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native"
+import React, { useState } from "react";
+import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
+import { Image } from "expo-image";
 
 export default function GameScreen() {
-  // TODO
+  
+  // TODO: implémenter logique de jeu
 
+  const blurhash = "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
+  
   // Rendu composants
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>I have a mouth so I must scream</Text>
+      <Text style={styles.title}>I HAVE A MOUTH SO I MUST SCREAM</Text>
+      <Image
+        style={styles.image}
+        source="https://i.ytimg.com/vi/MGs__rwhoEA/maxresdefault.jpg"
+        placeholder={{blurhash}}
+        contentFit="cover"
+        transition={1000}
+      />
     </View>
   )
 }
@@ -22,6 +33,7 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+    flex: 1
   },
   title: {
     color: "black",
@@ -33,4 +45,9 @@ const styles = StyleSheet.create({
   input: {
     marginBottom: 20,
   },
+  image: {
+    flex: 1,
+    width: "100%",
+    backgroundColor: "#0553",
+  }
 })

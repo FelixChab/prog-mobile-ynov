@@ -12,19 +12,24 @@ export default function AuthScreen() {
 
   // Gestion de la connexion
   const handleLogin = (username: string, password: string) => {
-   
     const error = signIn(username, password); // Car signIn() ne retourne rien sauf une erreur s'il y en a une
 
     // Si on reçois un message d'erreur lors de la connexion...
     if (error === null) {
-      Alert.alert("Erreur", "Nom d’utilisateur ou mot de passe incorrect.")
-      console.log("[ERR] Aucun utilisateur trouvé !")
+      Alert.alert("Erreur", "Nom d’utilisateur ou mot de passe incorrect.");
+      console.log("[ERR] Aucun utilisateur trouvé !");
+      throw new Error("Utilisateur inexistant");
     } else {
       // L'utilisateur existe donc se connecte, redirection
-      signIn(username, password)
-      router.replace("/")
+      signIn(username, password);
+      router.replace("/game");
     }
   }
+
+  // Ajout d'un utilisateur si inscription
+    const addUser = (username: string, password: string) => {
+      // TODO: ajout utilisateur
+    }
 
   // Rendu composants
   return (
