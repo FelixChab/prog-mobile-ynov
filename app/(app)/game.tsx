@@ -17,7 +17,7 @@ export default function GameScreen() {
         source="https://i.ytimg.com/vi/MGs__rwhoEA/maxresdefault.jpg"
         placeholder={{blurhash}}
         contentFit="cover"
-        transition={1000}
+        transition={2000}
       />
     </View>
   )
@@ -28,26 +28,28 @@ const styles = StyleSheet.create({
   container: {
     fontFamily: "Arial, sans-serif",
     backgroundColor: "#f0f4f8",
-    margin: 0,
-    padding: 1,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    flex: 1
+    height: "100%"
   },
   title: {
     color: "black",
     fontWeight: "bold",
     fontSize: 30,
-    marginTop: 50,
-    marginBottom: 20,
+    marginBottom: 20
   },
   input: {
     marginBottom: 20,
+    fontStyle: "italic",
+    borderColor: "#4fbeda",
+    borderWidth: 1,
+    borderRadius: 10,
+    padding: 10
   },
   image: {
     flex: 1,
     width: "100%",
-    backgroundColor: "#0553",
+    backgroundColor: "#0553"
   }
-})
+});
