@@ -3,7 +3,7 @@ import { useStorageState } from "@/hooks/useStorageState";
 import { db } from "@/config/useFirebase";
 import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
 import { Alert } from "react-native";
-// import bcrypt from "bcryptjs";
+import { router } from "expo-router";
 
 interface User {
   id: string,
@@ -40,7 +40,6 @@ export function useAuth() {
 
 // Provider des informations de la session
 export function SessionProvider({ children }: PropsWithChildren) {
-  //const [user, setUser] = useState<User | null>(null);
   const [[isLoading, session], setSession] = useStorageState("");
 
   // Rendu composants
@@ -58,12 +57,11 @@ export function SessionProvider({ children }: PropsWithChildren) {
             // L'utilisateur existe dans Firestore
             if (!doc.empty) {
               const userData = doc.docs[0].data() as User;
-              const isValidPwd = password == userData.password;// await bcrypt.compare(password, userData.password);
-              if (isValidPwd) return false;
               setSession(userData.id);
               return true;
+            } else {
+              return false;
             }
-            return false;
           } catch (error) {
             Alert.alert("Erreur d'authentification: " + error);
             return false;
@@ -89,7 +87,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
                Alert.alert("Cet utilisateur existe déjà");
                return false;
              } else {
-               // Ajout de l'utilisateur à Firestore
+              // Ajout de l'utilisateur à Firestore
               //  const salt = await bcrypt.genSalt();
               //  const hashedPassword = await bcrypt.hash(password, salt);
               const hashedPassword = password; // not very hashed

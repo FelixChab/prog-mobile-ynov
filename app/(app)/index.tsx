@@ -8,6 +8,13 @@ export default function Index() {
   const [session, setSession] = useStorageState("");
   const { signOut } = useAuth();
 
+  // Gestion de la déconnexion
+  const handleSignOut = () => {
+    signOut();
+    router.replace("/auth");
+    setSession(null);
+  }
+
   // Rendu composants page
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -18,7 +25,7 @@ export default function Index() {
         margin: 0,
         marginBottom: 10
       }}>I HAVE A MOUTH SO I MUST SCREAM</Text>
-      {!session ? (
+      {session ? (
         <>
           <Text style={{ color: "green", marginBottom: 10, marginTop: 0 }}>
             Vous êtes connecté !
@@ -26,23 +33,20 @@ export default function Index() {
           <Button
             title="Jouer"
             onPress={() => {
-              router.replace("/game")
+              router.replace("/game");
             }}
             color="red"
           />
           <Button
             title="Leaderboard"
             onPress={() => {
-              router.replace("/leaderboard")
+              router.replace("/leaderboard");
             }}
             color="green"
           />
           <Button
             title="Déconnexion"
-            onPress={() => {
-              signOut()
-              router.replace("/auth")
-            }}
+            onPress={() => { handleSignOut()}}
           />
         </>
       ) : (
@@ -59,5 +63,5 @@ export default function Index() {
         </>
       )}
     </View>
-  )
+  );
 }
