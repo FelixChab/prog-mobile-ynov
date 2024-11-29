@@ -18,7 +18,7 @@ export default function Index() {
         margin: 0,
         marginBottom: 10
       }}>I HAVE A MOUTH SO I MUST SCREAM</Text>
-      {session ? (
+      {!session ? (
         <>
           <Text style={{ color: "green", marginBottom: 10, marginTop: 0 }}>
             Vous êtes connecté !
