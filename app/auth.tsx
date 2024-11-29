@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Text, TextInput, Button, StyleSheet, View } from "react-native";
+import { Text, TextInput, Button, StyleSheet, View, Pressable } from "react-native";
 import { Alert } from "react-native";
 import { router } from "expo-router";
 import { useAuth } from "../components/AuthProvider";
@@ -17,15 +17,15 @@ export default function AuthScreen() {
   const handleLogin = async (username: string, password: string) => {
     // Retour de la méthode signIn() utilisé comme erreur
     const error = signIn(username, password);
-
     // Si on reçois un message d'erreur lors de la connexion...
     if ((await error) === false) {
-      setFirstTime(true)
+      setFirstTime(true);
       Alert.alert("Erreur", "Nom d’utilisateur ou mot de passe incorrect.");
     } else {
       // L'utilisateur existe donc se connecte, redirection
+      setFirstTime(false);
       signIn(username, password);
-      router.replace("/game");
+      router.replace("/");
     }
   }
 
@@ -33,12 +33,15 @@ export default function AuthScreen() {
   const handleRegister = (username: string, password: string) => {
     register(username, password);
     // On redirige l'utilisateur une fois inscrit (donc connecté)
-    router.replace("/game");
+    router.replace("/");
   }
 
   // Rendu composants
   return (
     <View style={styles.container}>
+      <Pressable onPress={() => router.replace("/")} style={styles.return}>
+        <Text style={styles.returnText}>Retour</Text>
+      </Pressable>
       <Text style={styles.title}>Authentification</Text>
       <TextInput
         placeholder="Nom d'utilisateur"
@@ -54,7 +57,7 @@ export default function AuthScreen() {
         style={styles.input}
       />
       {!firstTime ? (
-        <Button title="Jouer" onPress={() => handleLogin(username, password)} />
+        <Button title="Connexion" onPress={() => handleLogin(username, password)} />
       ) : (
         <>
           <TextInput
@@ -108,5 +111,23 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
     padding: 10,
-  }
-});
+  },
+  return: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    marginBottom: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 24,
+    elevation: 3,
+    backgroundColor: "black",
+    borderRadius: 1,
+  },
+  returnText: {
+    fontSize: 16,
+    lineHeight: 20,
+    fontWeight: "bold",
+    letterSpacing: 0.3,
+    color: "white",
+  },
+})

@@ -1,7 +1,7 @@
 import { Text } from "react-native";
 import { Redirect, Stack } from "expo-router";
 import { useAuth } from "../../components/AuthProvider";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FirebaseAuthTypes } from "@react-native-firebase/auth";
 
 export default function AppLayout() {
@@ -14,7 +14,7 @@ export default function AppLayout() {
   }
 
   // Si aucune session n'est définie
-  if (user || !session) {
+  if (user && !session) {
     return <Redirect href={"/auth" as any} />
   }
 

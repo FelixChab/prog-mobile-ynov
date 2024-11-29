@@ -50,7 +50,7 @@ export default function ScoreScreen() {
 
   // Rendu composants
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <View style={styles.container}>
       <Pressable onPress={() => router.replace("/")} style={styles.return}>
         <Text style={styles.returnText}>Retour</Text>
       </Pressable>
@@ -69,7 +69,7 @@ export default function ScoreScreen() {
           </View>
         ))}
       </View>
-    </ScrollView>
+    </View>
   )
 }
 
