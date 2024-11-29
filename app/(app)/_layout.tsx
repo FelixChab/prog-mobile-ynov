@@ -1,12 +1,16 @@
 import { Text } from "react-native";
 import { Redirect, Stack } from "expo-router";
 import { useAuth } from "../../components/AuthProvider";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FirebaseAuthTypes } from "@react-native-firebase/auth";
 
 export default function AppLayout() {
   const [user, setUser] = useState<FirebaseAuthTypes.User | null>();
   const { session, isLoading } = useAuth();
+
+  useEffect(() => {
+    console.log(session)
+  },[isLoading])
 
   // Chargement de la page
   if (isLoading) {
@@ -14,7 +18,7 @@ export default function AppLayout() {
   }
 
   // Si aucune session n'est définie
-  if (user && !session) {;
+  if (user && !session) {
     return <Redirect href={"/auth" as any} />
   }
 
