@@ -1,8 +1,9 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Button, Pressable } from "react-native";
 import { Image } from "expo-image";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../../config/useFirebase";
+import { router } from "expo-router";
 
 export default function GameScreen() {
   // TODO: implémenter logique de jeu
@@ -12,15 +13,18 @@ export default function GameScreen() {
 
   // Gestion du meilleur score
   const updateHighScore = async (userId: string, newScore: number) => {
-    const userRef = doc(db, "Users", userId)
+    const userRef = doc(db, "Users", userId);
     await updateDoc(userRef, {
       highScore: newScore,
-    })
+    });
   }
   
   // Rendu composants
   return (
     <View style={styles.container}>
+      <Pressable onPress={() => router.replace("/")} style={styles.return}>
+          <Text style={styles.returnText}>Retour</Text>
+      </Pressable>
       <Text style={styles.title}>I HAVE A MOUTH SO I MUST SCREAM</Text>
       <Image
         style={styles.image}
@@ -41,13 +45,13 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    height: "100%"
+    height: "100%",
   },
   title: {
     color: "black",
     fontWeight: "bold",
     fontSize: 30,
-    marginBottom: 20
+    marginBottom: 20,
   },
   input: {
     marginBottom: 20,
@@ -55,11 +59,29 @@ const styles = StyleSheet.create({
     borderColor: "#4fbeda",
     borderWidth: 1,
     borderRadius: 10,
-    padding: 10
+    padding: 10,
   },
   image: {
     flex: 1,
     width: "100%",
-    backgroundColor: "#0553"
-  }
-});
+    backgroundColor: "#0553",
+  },
+  return: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    marginBottom: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 24,
+    elevation: 3,
+    backgroundColor: "black",
+    borderRadius: 1
+  },
+  returnText: {
+    fontSize: 16,
+    lineHeight: 20,
+    fontWeight: "bold",
+    letterSpacing: 0.30,
+    color: "white"
+  },
+})

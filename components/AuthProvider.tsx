@@ -1,8 +1,9 @@
-import React, { useContext, createContext, type PropsWithChildren, useState } from "react";
+import React, { useContext, createContext, type PropsWithChildren } from "react";
 import { useStorageState } from "@/hooks/useStorageState";
 import { db } from "@/config/useFirebase";
 import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
 import { Alert } from "react-native";
+import bcrypt from "bcryptjs";
 
 interface User {
   id: string,
@@ -51,18 +52,20 @@ export function SessionProvider({ children }: PropsWithChildren) {
           try {
             const dbUsers = collection(db, "Users");
             const q = query(dbUsers,
-              where("username", "==", username),
+              where("username", "==", username.toLowerCase()),
               where("password", "==", password));
             const doc = await getDocs(q);
             // L'utilisateur existe dans Firestore
             if (!doc.empty) {
               const userData = doc.docs[0].data() as User;
+              const isValidPwd = await bcrypt.compare(password, userData.password);
+              if (isValidPwd) return false;
               setSession(userData.id);
               return true;
             }
             return false;
           } catch (error) {
-            console.log("Erreur d'authentification: " + error);
+            Alert.alert("Erreur d'authentification: " + error);
             return false;
           }
         },
@@ -71,33 +74,33 @@ export function SessionProvider({ children }: PropsWithChildren) {
           if (session) {
             setSession(null);
           } else {
-            throw new Error("Can't sign out : no existing session.");
+            Alert.alert("Impossible de se déconnecter : aucune session active");
+            return;
           }
         },
         // Inscription
         register: async (username, password): Promise<boolean> => {
            try {
-             const dbUsers = collection(db, "Users")
-             const q = query(dbUsers, where("username", "==", username))
-             const doc = await getDocs(q)
+             const dbUsers = collection(db, "Users");
+             const q = query(dbUsers, where("username", "==", username.toLowerCase()));
+             const doc = await getDocs(q);
              // Vérifier si l'utilisateur existe déjà
              if (!doc.empty) {
-               // TODO: refuser l'inscription
                Alert.alert("Cet utilisateur existe déjà");
-               console.log("Un utilisateur avec ce nom existe déjà.");
                return false;
              } else {
                // Ajout de l'utilisateur à Firestore
+               const hashedPassword = await bcrypt.hash(password, 10);
                await addDoc(dbUsers, {
-                 username: username,
-                 password: password,
+                 username: username.toLowerCase(),
+                 password: hashedPassword,
                  highestScore: 0
                });
              }
-             console.log("Utilisateur enregistré avec succès.");
+             Alert.alert("Utilisateur enregistré avec succès !");
              return true;
            } catch (error) {
-             console.log("Erreur lors de l'inscription: " + error);
+             Alert.alert("Erreur : " + error);
              return false;
            }
         },
