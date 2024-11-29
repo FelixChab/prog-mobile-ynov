@@ -12,18 +12,17 @@ export default function Index() {
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       <Text style={{
-        fontSize: 100,
+        fontSize: 85,
         textAlign: "center",
         justifyContent: "center",
         margin: 0,
         marginBottom: 10
       }}>I HAVE A MOUTH SO I MUST SCREAM</Text>
-      {session ? (
+      {!session ? (
         <>
           <Text style={{ color: "green", marginBottom: 10, marginTop: 0 }}>
             Vous êtes connecté !
           </Text>
-          <br></br>
           <Button
             title="Jouer"
             onPress={() => {
@@ -31,7 +30,6 @@ export default function Index() {
             }}
             color="red"
           />
-          <br></br>
           <Button
             title="Leaderboard"
             onPress={() => {
@@ -39,7 +37,6 @@ export default function Index() {
             }}
             color="green"
           />
-          <br></br>
           <Button
             title="Déconnexion"
             onPress={() => {

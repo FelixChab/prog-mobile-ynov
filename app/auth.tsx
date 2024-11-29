@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ScrollView, Text, TextInput, Button, StyleSheet, Pressable } from "react-native";
+import { Text, TextInput, Button, StyleSheet, View } from "react-native";
 import { Alert } from "react-native";
 import { router } from "expo-router";
 import { useAuth } from "../components/AuthProvider";
@@ -38,10 +38,7 @@ export default function AuthScreen() {
 
   // Rendu composants
   return (
-    <ScrollView style={styles.container}>
-      <Pressable onPress={() => router.replace("/")} style={styles.return}>
-        <Text style={styles.returnText}>Retour</Text>
-      </Pressable>
+    <View style={styles.container}>
       <Text style={styles.title}>Authentification</Text>
       <TextInput
         placeholder="Nom d'utilisateur"
@@ -84,7 +81,7 @@ export default function AuthScreen() {
           </Text>
         </>
       )}
-    </ScrollView>
+    </View>
   )
 }
 
@@ -111,23 +108,5 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
     padding: 10,
-  },
-  return: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    marginBottom: 10,
-    paddingVertical: 10,
-    paddingHorizontal: 24,
-    elevation: 3,
-    backgroundColor: "black",
-    borderRadius: 1,
-  },
-  returnText: {
-    fontSize: 16,
-    lineHeight: 20,
-    fontWeight: "bold",
-    letterSpacing: 0.3,
-    color: "white",
   }
 });

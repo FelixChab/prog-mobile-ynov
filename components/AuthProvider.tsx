@@ -3,7 +3,7 @@ import { useStorageState } from "@/hooks/useStorageState";
 import { db } from "@/config/useFirebase";
 import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
 import { Alert } from "react-native";
-import bcrypt from "bcryptjs";
+// import bcrypt from "bcryptjs";
 
 interface User {
   id: string,
@@ -58,7 +58,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
             // L'utilisateur existe dans Firestore
             if (!doc.empty) {
               const userData = doc.docs[0].data() as User;
-              const isValidPwd = await bcrypt.compare(password, userData.password);
+              const isValidPwd = password == userData.password;// await bcrypt.compare(password, userData.password);
               if (isValidPwd) return false;
               setSession(userData.id);
               return true;
@@ -90,7 +90,9 @@ export function SessionProvider({ children }: PropsWithChildren) {
                return false;
              } else {
                // Ajout de l'utilisateur à Firestore
-               const hashedPassword = await bcrypt.hash(password, 10);
+              //  const salt = await bcrypt.genSalt();
+              //  const hashedPassword = await bcrypt.hash(password, salt);
+              const hashedPassword = password; // not very hashed
                await addDoc(dbUsers, {
                  username: username.toLowerCase(),
                  password: hashedPassword,
