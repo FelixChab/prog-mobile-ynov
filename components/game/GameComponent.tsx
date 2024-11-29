@@ -14,7 +14,6 @@ import { router } from "expo-router";
 
 
 export default function GameComponent() {
-
 	// sound capture managment
 	let amplitude = -100;
 
@@ -37,7 +36,7 @@ export default function GameComponent() {
 	const [gameLoop, setGameLoop] = useState<{"stop": () => void}>();
 
 	const [ player, playerX, playerY ] = usePlayer({id: 0, x: PLAYER_OFFSET, y: 250, size: PLAYER_SIZE});
-	const groundPlatform = useGround({ playerX, renderingDistance: 50 });
+	const groundPlatform = useGround({ playerX, renderingDistance: 500 });
 	const gameObjects: GameObject[] = [player];
 	const [ score, setScore ] = useState(0);
 	const [ gameOver, setGameOver ] = useState(false);
@@ -60,7 +59,7 @@ export default function GameComponent() {
 		if (playerY > height && gameLoop) {
 			setGameOver(true);
 			gameLoop.stop();
-			router.replace("/gameOver");
+			router.replace({ pathname: "/gameover", params: { score } });
 		}
 	}, [playerY]);
 

@@ -9,6 +9,7 @@ export default function WallComponent({x, y, wallWidth, wallHeight, playerX }:
 	wallHeight: number,
 	playerX: number
 }) {
+	const { width, height } = useWindowDimensions();
 
     const style = StyleSheet.create({
 		background: {

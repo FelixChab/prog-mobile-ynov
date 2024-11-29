@@ -1,5 +1,4 @@
 import { GROUND_HEIGHT, GROUND_SIZE_MAX, GROUND_SIZE_MIN, HOLE_SIZE_MAX, HOLE_SIZE_MIN } from '@/constants/game';
-import { Player } from '@/engine/game-objects/player';
 import { Wall } from '@/engine/game-objects/wall';
 import { useEffect, useState } from 'react';
 
