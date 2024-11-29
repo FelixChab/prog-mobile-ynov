@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet } from "react-native";
+import { ScrollView, Text, TextInput, Button, StyleSheet, Pressable } from "react-native";
 import { Alert } from "react-native";
 import { router } from "expo-router";
 import { useAuth } from "../components/AuthProvider";
@@ -21,12 +21,11 @@ export default function AuthScreen() {
     // Si on reçois un message d'erreur lors de la connexion...
     if ((await error) === false) {
       setFirstTime(true)
-      Alert.alert("Erreur", "Nom d’utilisateur ou mot de passe incorrect.")
-      console.log("[ERR] Aucun utilisateur trouvé !")
+      Alert.alert("Erreur", "Nom d’utilisateur ou mot de passe incorrect.");
     } else {
       // L'utilisateur existe donc se connecte, redirection
-      signIn(username, password)
-      router.replace("/game")
+      signIn(username, password);
+      router.replace("/game");
     }
   }
 
@@ -39,7 +38,10 @@ export default function AuthScreen() {
 
   // Rendu composants
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
+      <Pressable onPress={() => router.replace("/")} style={styles.return}>
+        <Text style={styles.returnText}>Retour</Text>
+      </Pressable>
       <Text style={styles.title}>Authentification</Text>
       <TextInput
         placeholder="Nom d'utilisateur"
@@ -54,7 +56,7 @@ export default function AuthScreen() {
         secureTextEntry
         style={styles.input}
       />
-      { !firstTime ? (
+      {!firstTime ? (
         <Button title="Jouer" onPress={() => handleLogin(username, password)} />
       ) : (
         <>
@@ -68,7 +70,12 @@ export default function AuthScreen() {
           <Button
             title="Inscription"
             disabled={
-              !(password && confirmPassword && username && password === confirmPassword)
+              !(
+                password &&
+                confirmPassword &&
+                username &&
+                password === confirmPassword
+              )
             }
             onPress={() => handleRegister(username, password)}
           />
@@ -77,7 +84,7 @@ export default function AuthScreen() {
           </Text>
         </>
       )}
-    </View>
+    </ScrollView>
   )
 }
 
@@ -89,13 +96,13 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    height: "100%"
+    height: "100%",
   },
   title: {
     color: "black",
     fontWeight: "bold",
     fontSize: 30,
-    marginBottom: 20
+    marginBottom: 20,
   },
   input: {
     marginBottom: 20,
@@ -103,6 +110,24 @@ const styles = StyleSheet.create({
     borderColor: "#4fbeda",
     borderWidth: 1,
     borderRadius: 10,
-    padding: 10
+    padding: 10,
   },
+  return: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    marginBottom: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 24,
+    elevation: 3,
+    backgroundColor: "black",
+    borderRadius: 1,
+  },
+  returnText: {
+    fontSize: 16,
+    lineHeight: 20,
+    fontWeight: "bold",
+    letterSpacing: 0.3,
+    color: "white",
+  }
 });
