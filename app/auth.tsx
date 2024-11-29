@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet } from "react-native";
 import { Alert } from "react-native";
 import { router } from "expo-router";
-import { useSession } from "../components/AuthProvider";
+import { useAuth } from "../components/AuthProvider";
 
 // Ecran et logique d'authentification à l'aide du AuthProvider
 export default function AuthScreen() {
@@ -10,29 +10,30 @@ export default function AuthScreen() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [firstTime, setFirstTime] = useState(false);
-  
-  const { signIn, register } = useSession();
+
+  const { signIn, register } = useAuth();
 
   // Gestion de la connexion
-  const handleLogin = (username: string, password: string) => {
-    // Car signIn() ne retourne rien sauf une erreur s'il y en a une...
-    const error = signIn(username, password)
+  const handleLogin = async (username: string, password: string) => {
+    // Retour de la méthode signIn() utilisé comme erreur
+    const error = signIn(username, password);
 
     // Si on reçois un message d'erreur lors de la connexion...
-    if (error === null) {
-      setFirstTime(true);
-      Alert.alert("Erreur", "Nom d’utilisateur ou mot de passe incorrect.");
-      console.log("[ERR] Aucun utilisateur trouvé !");
+    if ((await error) === false) {
+      setFirstTime(true)
+      Alert.alert("Erreur", "Nom d’utilisateur ou mot de passe incorrect.")
+      console.log("[ERR] Aucun utilisateur trouvé !")
     } else {
       // L'utilisateur existe donc se connecte, redirection
-      signIn(username, password);
-      router.replace("/game");
+      signIn(username, password)
+      router.replace("/game")
     }
   }
 
   // Gestion de l'inscription
   const handleRegister = (username: string, password: string) => {
     register(username, password);
+    // On redirige l'utilisateur une fois inscrit (donc connecté)
     router.replace("/game");
   }
 
@@ -53,7 +54,7 @@ export default function AuthScreen() {
         secureTextEntry
         style={styles.input}
       />
-      {!firstTime ? (
+      { !firstTime ? (
         <Button title="Jouer" onPress={() => handleLogin(username, password)} />
       ) : (
         <>
@@ -66,10 +67,14 @@ export default function AuthScreen() {
           />
           <Button
             title="Inscription"
-            disabled={!(password && confirmPassword && username && password === confirmPassword)}
+            disabled={
+              !(password && confirmPassword && username && password === confirmPassword)
+            }
             onPress={() => handleRegister(username, password)}
           />
-          <Text style={{color: "red", marginTop: 20}}>Aucun utilisateur trouvé, veuillez vous inscrire.</Text>
+          <Text style={{ color: "red", marginTop: 20 }}>
+            Aucun utilisateur trouvé, veuillez vous inscrire.
+          </Text>
         </>
       )}
     </View>
@@ -100,4 +105,4 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10
   },
-})
+});

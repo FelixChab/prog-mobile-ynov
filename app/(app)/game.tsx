@@ -1,12 +1,22 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Image } from "expo-image";
+import { doc, updateDoc } from "firebase/firestore";
+import { db } from "../../config/useFirebase";
 
 export default function GameScreen() {
-  
   // TODO: implémenter logique de jeu
 
-  const blurhash = "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
+  const blurhash =
+    "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj["
+
+  // Gestion du meilleur score
+  const updateHighScore = async (userId: string, newScore: number) => {
+    const userRef = doc(db, "Users", userId)
+    await updateDoc(userRef, {
+      highScore: newScore,
+    })
+  }
   
   // Rendu composants
   return (
@@ -15,7 +25,7 @@ export default function GameScreen() {
       <Image
         style={styles.image}
         source="https://i.ytimg.com/vi/MGs__rwhoEA/maxresdefault.jpg"
-        placeholder={{blurhash}}
+        placeholder={{ blurhash }}
         contentFit="cover"
         transition={2000}
       />

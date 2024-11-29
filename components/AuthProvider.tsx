@@ -1,24 +1,33 @@
-import { useContext, createContext, type PropsWithChildren } from "react";
+import React, { useContext, createContext, type PropsWithChildren, useState } from "react";
 import { useStorageState } from "@/hooks/useStorageState";
-import { Users } from "../constants/Users";
+import { db } from "@/config/useFirebase";
+import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import { Alert } from "react-native";
+
+interface User {
+  id: string,
+  username: string,
+  password: string,
+  highestScore: number
+}
 
 // Contexte d'authentification
 const AuthContext = createContext<{
-  signIn: (username: string, password: string) => void
+  signIn: (username: string, password: string) => Promise<boolean>
   signOut: () => void
-  register: (username: string, password: string) => void
+  register: (username: string, password: string) => Promise<boolean>
   session?: string | null
   isLoading: boolean
 }>({
-  signIn: () => null,
+  signIn: async () => false,
   signOut: () => null,
-  register: () => null,
+  register: async () => false,
   session: null,
-  isLoading: false
-});
+  isLoading: false,
+})
 
 // Accès aux infos de la session utilisateur
-export function useSession() {
+export function useAuth() {
   const value = useContext(AuthContext);
   if (process.env.NODE_ENV !== "production") {
     if (!value) {
@@ -30,7 +39,7 @@ export function useSession() {
 
 // Provider des informations de la session
 export function SessionProvider({ children }: PropsWithChildren) {
-
+  //const [user, setUser] = useState<User | null>(null);
   const [[isLoading, session], setSession] = useStorageState("");
 
   // Rendu composants
@@ -38,42 +47,59 @@ export function SessionProvider({ children }: PropsWithChildren) {
     <AuthContext.Provider
       value={{
         // Connexion
-        signIn: (username, password) => {
-          const user = Users.find((user) => user.name === username && user.password === password);
-          if (!user) {
-            console.log("[ERR] signIn() - Utilisateur introuvable")
-            return null;
-          } else {
-            setSession(user.id);
-          } 
+        signIn: async (username, password): Promise<boolean> => {
+          try {
+            const dbUsers = collection(db, "Users");
+            const q = query(dbUsers,
+              where("username", "==", username),
+              where("password", "==", password));
+            const doc = await getDocs(q);
+            // L'utilisateur existe dans Firestore
+            if (!doc.empty) {
+              const userData = doc.docs[0].data() as User;
+              setSession(userData.id);
+              return true;
+            }
+            return false;
+          } catch (error) {
+            console.log("Erreur d'authentification: " + error);
+            return false;
+          }
         },
         // Déconnexion
         signOut: () => {
           if (session) {
             setSession(null);
           } else {
-            // TODO: gestion Erreur
-            console.log("[ERR] signOut() - aucune session");
-            throw new Error("Can't sign out : no existing session");
+            throw new Error("Can't sign out : no existing session.");
           }
         },
         // Inscription
-        register: (username, password) => {
-          const user = Users.find((user) => user.name === username && user.password === password);
-          if (!user) {
-            const newId = (Users.length + 1).toString(); // Nouvel ID (à vérif)
-            const newUser = {
-              id: newId,
-              name: username,
-              password: password,
-              highestScore: 0 // Aucun highest score car pas encore joué
-            }
-            Users.push(newUser);
-          } else {
-            // TODO: gestion erreur
-            console.log("[ERR] register() - l'utilisateur existe déjà");
-            throw new Error("Can't register new user, user already exists");
-          }
+        register: async (username, password): Promise<boolean> => {
+           try {
+             const dbUsers = collection(db, "Users")
+             const q = query(dbUsers, where("username", "==", username))
+             const doc = await getDocs(q)
+             // Vérifier si l'utilisateur existe déjà
+             if (!doc.empty) {
+               // TODO: refuser l'inscription
+               Alert.alert("Cet utilisateur existe déjà");
+               console.log("Un utilisateur avec ce nom existe déjà.");
+               return false;
+             } else {
+               // Ajout de l'utilisateur à Firestore
+               await addDoc(dbUsers, {
+                 username: username,
+                 password: password,
+                 highestScore: 0
+               });
+             }
+             console.log("Utilisateur enregistré avec succès.");
+             return true;
+           } catch (error) {
+             console.log("Erreur lors de l'inscription: " + error);
+             return false;
+           }
         },
         session,
         isLoading
