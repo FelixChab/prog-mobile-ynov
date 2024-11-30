@@ -17,7 +17,8 @@ export function useGround({ playerX, renderingDistance }: { playerX: number, ren
             setStateY: undefined,
             width: Math.floor(Math.random() * (GROUND_SIZE_MAX - GROUND_SIZE_MIN)) + GROUND_SIZE_MIN,
             height: 500,
-            grounded: false
+            grounded: false,
+            collision: true
         });
     }
 

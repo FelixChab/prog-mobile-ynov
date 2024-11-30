@@ -18,3 +18,6 @@ export const HOLE_SIZE_MAX = 300;
 export const HOLE_SIZE_MIN = 50;
 export const GROUND_SIZE_MAX = 600;
 export const GROUND_SIZE_MIN = 500;
+export const LASER_WEIGHT = 5;
+export const LASER_ACCELERATION = 0.005;
+export const LASER_STARTING_X = -20;

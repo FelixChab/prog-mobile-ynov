@@ -14,8 +14,9 @@ export abstract class GameObject {
     height: number = 0;
     width: number = 0;
     grounded: boolean = false;
+    collision: boolean = true;
 
-    constructor({ id, x, y, ax, ay, vx, vy, gravity, setStateX, setStateY, width, height }: {
+    constructor({ id, x, y, ax, ay, vx, vy, gravity, setStateX, setStateY, width, height, collision }: {
         id: number,
         x: number,
         y: number,
@@ -28,7 +29,8 @@ export abstract class GameObject {
         setStateY: React.Dispatch<React.SetStateAction<number>> | undefined,
         width: number,
         height: number,
-        grounded: boolean // useful only if gravity
+        grounded: boolean, // useful only if
+        collision: boolean
     }) {
         this.id = id;
         this.x = x;
@@ -43,6 +45,7 @@ export abstract class GameObject {
         this.width = width;
         this.height = height;
         this.grounded = false;
+        this.collision = collision;
     }
 
     getTop() {
@@ -79,38 +82,44 @@ export abstract class GameObject {
         if (this.vy < -MAX_SPEED) this.vy = -MAX_SPEED;
         
         this.x += this.vx;
-        const collisionX = objects.filter((obj) => ((obj.constructor != this.constructor || obj.id != this.id) && this.checkCollision(obj)));
-        if (collisionX.length) {
-            if (this.vx > 0) {
-                const collidedObj = collisionX.reduce((prev, cur) => prev.x < cur.x ? prev : cur);
-                const delta =  this.getRight() - collidedObj.getLeft();
-                this.x -= delta;
-            } else {
-                const collidedObj = collisionX.reduce((prev, cur) => prev.x > cur.x ? prev : cur);
-                const delta = collidedObj.getRight() - this.getLeft();
-                this.x += delta;
+        if (this.collision) {
+            const collisionX = objects.filter((obj) => ((obj.constructor != this.constructor || obj.id != this.id)
+                                                            && obj.collision && this.checkCollision(obj)));
+            if (collisionX.length) {
+                if (this.vx > 0) {
+                    const collidedObj = collisionX.reduce((prev, cur) => prev.x < cur.x ? prev : cur);
+                    const delta =  this.getRight() - collidedObj.getLeft();
+                    this.x -= delta;
+                } else {
+                    const collidedObj = collisionX.reduce((prev, cur) => prev.x > cur.x ? prev : cur);
+                    const delta = collidedObj.getRight() - this.getLeft();
+                    this.x += delta;
+                }
+                this.ax = 0;
+                this.vx = 0;
             }
-            this.ax = 0;
-            this.vx = 0;
         }
         
         if (this.gravity) this.grounded = false;
         this.y += this.vy;
-        const collisionY = objects.filter((obj) => ((obj.constructor != this.constructor || obj.id != this.id) && this.checkCollision(obj)));
-        if (collisionY.length) {
-            if (this.vy > 0) {
-                const collidedObj = collisionY.reduce((prev, cur) => prev.y < cur.y ? prev : cur);
-                const delta =  collidedObj.getTop() - this.getBottom();
-                this.y += delta;
+        if (this.collision) {
+            const collisionY = objects.filter((obj) => ((obj.constructor != this.constructor || obj.id != this.id) 
+                                                            && obj.collision && this.checkCollision(obj)));
+            if (collisionY.length) {
+                if (this.vy > 0) {
+                    const collidedObj = collisionY.reduce((prev, cur) => prev.y < cur.y ? prev : cur);
+                    const delta =  collidedObj.getTop() - this.getBottom();
+                    this.y += delta;
 
-                if (this.gravity) this.grounded = true;
-            } else {
-                const collidedObj = collisionY.reduce((prev, cur) => prev.y > cur.y ? prev : cur);
-                const delta = collidedObj.getBottom() - this.getTop();
-                this.y -= delta;
+                    if (this.gravity) this.grounded = true;
+                } else {
+                    const collidedObj = collisionY.reduce((prev, cur) => prev.y > cur.y ? prev : cur);
+                    const delta = collidedObj.getBottom() - this.getTop();
+                    this.y -= delta;
+                }
+                this.ay = 0;
+                this.vy = 0;
             }
-            this.ay = 0;
-            this.vy = 0;
         }
     }
 }

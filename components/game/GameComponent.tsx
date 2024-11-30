@@ -6,13 +6,15 @@ import { GameObject } from "@/engine/game-objects/game_object";
 import { usePlayer } from "@/hooks/usePlayer";
 import PlayerComponent from "./PlayerComponent";
 import WallComponent from "./WallComponent";
-import { PLAYER_OFFSET, PLAYER_SIZE, SCORE_MULT } from "@/constants/game";
+import { LASER_STARTING_X, PLAYER_OFFSET, PLAYER_SIZE, SCORE_MULT } from "@/constants/game";
 import { Wall } from "@/engine/game-objects/wall";
 import { useGround } from "@/hooks/useGround";
 import { AudioModule } from "expo-audio";
 import { router } from "expo-router";
 import { collection, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
 import { db } from "../../config/useFirebase";
+import { useLaser } from "@/hooks/useLaser";
+import LaserComponent from "./LaserComponent";
 
 
 export default function GameComponent() {
@@ -43,10 +45,10 @@ export default function GameComponent() {
     y: 250,
     size: PLAYER_SIZE,
   })
+  const [laser, laserX] = useLaser({id: 0, x: LASER_STARTING_X});
   const groundPlatform = useGround({ playerX, renderingDistance: 500 })
-  const gameObjects: GameObject[] = [player]
+  const gameObjects: GameObject[] = [player, laser]
   const [score, setScore] = useState(0)
-  const [gameOver, setGameOver] = useState(false)
 
   useEffect(() => {
     const gameLoop = startGameLoop()
@@ -68,13 +70,12 @@ export default function GameComponent() {
 
 	// Gestion de game over
 	useEffect(() => {
-		if (playerY > height && gameLoop) {
-			setGameOver(true);
-			gameLoop.stop();
+		if (playerY > height || laser.getRight() > player.getLeft()) {
+      if (gameLoop) gameLoop.stop();
 			//updateHighScore();
 			router.replace({ pathname: "/gameover", params: { score } });
 		}
-	}, [playerY]);
+	}, [laserX]);
 
   useEffect(() => {
     setScore(Math.floor((playerX - PLAYER_OFFSET) * SCORE_MULT))
@@ -144,6 +145,7 @@ export default function GameComponent() {
             />
           )
         })}
+        <LaserComponent x={laserX} playerX={playerX}/>
     </View>
   )
 }
