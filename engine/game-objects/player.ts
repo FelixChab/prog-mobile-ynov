@@ -4,7 +4,7 @@ import { GameObject } from "./game_object";
 export class Player extends GameObject {
     size: number = 0;
 
-    constructor({ id, x, y, ax, ay, vx, vy, gravity, setStateX, setStateY, width, height, size, grounded }: {
+    constructor({ id, x, y, ax, ay, vx, vy, gravity, setStateX, setStateY, width, height, size, grounded, collision }: {
         id: number,
         x: number,
         y: number,
@@ -18,9 +18,10 @@ export class Player extends GameObject {
         width: number,
         height: number,
         size: number,
-        grounded: boolean
+        grounded: boolean,
+        collision: boolean
     }) {
-        super({ id, x, y, ax, ay, vx, vy, gravity, setStateX, setStateY, width, height, grounded });
+        super({ id, x, y, ax, ay, vx, vy, gravity, setStateX, setStateY, width, height, grounded, collision });
         this.size = size;
     }
 

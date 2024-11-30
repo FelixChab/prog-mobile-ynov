@@ -23,7 +23,8 @@ export function usePlayer({ id, x, y, size }: { id: number, x: number, y: number
         width: size,
         height: size,
         size: size,
-        grounded: false
+        grounded: false,
+        collision: true
     });
 
     return [ player, playerX, playerY ];
