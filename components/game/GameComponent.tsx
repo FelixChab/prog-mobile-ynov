@@ -11,7 +11,7 @@ import { Wall } from "@/engine/game-objects/wall";
 import { useGround } from "@/hooks/useGround";
 import { AudioModule } from "expo-audio";
 import { router } from "expo-router";
-import { collection, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
+import { collection, getDocs, query, updateDoc, where } from "firebase/firestore";
 import { db } from "../../config/useFirebase";
 import { useLaser } from "@/hooks/useLaser";
 import LaserComponent from "./LaserComponent";
@@ -45,7 +45,7 @@ export default function GameComponent() {
     y: 250,
     size: PLAYER_SIZE,
   })
-  const [laser, laserX] = useLaser({id: 0, x: LASER_STARTING_X});
+  const [laser, laserX] = useLaser({ id: 0, x: LASER_STARTING_X })
   const groundPlatform = useGround({ playerX, renderingDistance: 500 })
   const gameObjects: GameObject[] = [player, laser]
   const [score, setScore] = useState(0)
@@ -68,65 +68,75 @@ export default function GameComponent() {
     }
   }
 
-	// Gestion de game over
-	useEffect(() => {
-		if (playerY > height || laser.getRight() > player.getLeft()) {
+  // Gestion de game over
+  useEffect(() => {
+    if (playerY > height || laser.getRight() > player.getLeft()) {
       if (gameLoop) gameLoop.stop();
-			//updateHighScore();
-			router.replace({ pathname: "/gameover", params: { score } });
-		}
-	}, [laserX]);
+      // TODO: récup nom joueur pour mettre à jour son score
+      updateHighScore("todo", score);
+      router.replace({ pathname: "/gameover", params: { score } });
+    }
+  }, [laserX]);
 
   useEffect(() => {
-    setScore(Math.floor((playerX - PLAYER_OFFSET) * SCORE_MULT))
-  }, [playerX])
+    setScore(Math.floor((playerX - PLAYER_OFFSET) * SCORE_MULT));
+  }, [playerX]);
 
+  // Gestion du meilleur score
+  const updateHighScore = async (username: string, newScore: number) => {
+    try {
+      const dbUsers = collection(db, "Users")
+      const q = query(dbUsers, where("username", "==", username.toLowerCase()));
+      const doc = await getDocs(q)
+      // Si on obtient un résultat
+      if (!doc.empty) {
+        const userDoc = doc.docs[0]; // Premier résultat correspondant à la requête précèdente
+        const userData = userDoc.data();
+        // On vérifie le nouveau score
+        if (newScore > (userData.highestScore)) {
+          await updateDoc(userDoc.ref, {
+            highestScore: newScore
+          });
+          Alert.alert("Nouveau record ! Score mis à jour.");
+        } else {
+          Alert.alert("Utilisateur introuvable.");
+        }
+      }
+    } catch (error) {
+      Alert.alert("Erreur: " + error);
+    }
+  }
+
+  // Style CSS
   const style = StyleSheet.create({
     background: {
       backgroundColor: "black",
       width,
-      height,
+      height
     },
     score: {
       fontSize: 30,
       position: "absolute",
-      color: "white",
+      color: "white"
     },
     gameOverOverlay: {
       backgroundColor: "black",
       width,
-      height,
+      height
     },
     scoreGameOver: {
       fontSize: 50,
       position: "absolute",
-      color: "white",
+      color: "white"
     },
     display: {
       display: "flex",
       top: 100,
-      bottom: 100,
-    },
-  })
+      bottom: 100
+    }
+  });
 
-  // Gestion du meilleur score
-  const updateHighScore = async (username: string, newScore: number) => {
-		try {
-			const dbUsers = collection(db, "Users");
-			const q = query(dbUsers, where("username", "==", username.toLowerCase()));
-			const doc = await getDocs(q);
-			// Vérifier si l'utilisateur existe déjà
-			if (!doc.empty) {
-				if (newScore > 1) {
-					// TODO: score
-				}
-			}
-		} catch (error) {
-			Alert.alert("Erreur: " + error);
-		}
-	}
-	
-	// Rendu composants
+  // Rendu composants
   return (
     <View style={style.background}>
       {<Text style={style.score}>Score: {score}</Text>}
@@ -145,7 +155,7 @@ export default function GameComponent() {
             />
           )
         })}
-        <LaserComponent x={laserX} playerX={playerX}/>
+      <LaserComponent x={laserX} playerX={playerX} />
     </View>
   )
 }

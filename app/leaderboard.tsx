@@ -32,13 +32,12 @@ export default function ScoreScreen() {
         orderBy("highestScore", "desc")
       );
       const q = await getDocs(dbScores);
-
       const highestScores = q.docs.map((doc) => {
         const userData = doc.data();
         return {
           id: doc.id, // ID unique Firestore
           username: userData.username,
-          highestScore: userData.highestScore,
+          highestScore: userData.highestScore
         }
       });
       return highestScores;
@@ -50,7 +49,7 @@ export default function ScoreScreen() {
 
   // Rendu composants
   return (
-    <View style={styles.container}>
+    <View style={styles.background}>
       <Pressable onPress={() => router.replace("/")} style={styles.return}>
         <Text style={styles.returnText}>Back</Text>
       </Pressable>
@@ -72,16 +71,18 @@ export default function ScoreScreen() {
         </ScrollView>
       </View>
     </View>
-  )
+  );
 }
 
 // Style CSS
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "black",
-    justifyContent: "center",
+  background: {
+    flex: 1,
     alignItems: "center",
-    padding: 20,
+    backgroundColor: "black",
+    fontFamily: "Arial, sans-serif",
+    display: "flex",
+    justifyContent: "center"
   },
   title: {
     color: "white",
@@ -93,7 +94,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#666",
     textAlign: "center",
-    marginTop: 50,
+    marginTop: 50
   },
   table: {
     width: "100%",
@@ -103,12 +104,10 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     overflow: "hidden",
     backgroundColor: "#fff",
-    height: "100%"
-
   },
   row: {
     flexDirection: "row",
-    borderBottomColor: "#ddd",
+    borderBottomColor: "#ddd"
   },
   rows: {
     height: "100%"
@@ -118,11 +117,11 @@ const styles = StyleSheet.create({
     padding: 10,
     textAlign: "center",
     color: "#333",
-    fontSize: 16,
+    fontSize: 16
   },
   header: {
     backgroundColor: "#f0f0f0",
-    fontWeight: "bold",
+    fontWeight: "bold"
   },
   return: {
     position: "absolute",
@@ -133,13 +132,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     elevation: 3,
     backgroundColor: "black",
-    borderRadius: 1,
+    borderRadius: 1
   },
   returnText: {
     fontSize: 16,
     lineHeight: 20,
     fontWeight: "bold",
     letterSpacing: 0.3,
-    color: "white",
+    color: "white"
   }
-})
+});

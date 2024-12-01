@@ -20,7 +20,7 @@ export default function Index() {
   return (
     <View style={style.background}>
       <Text style={style.title}>I HAVE A MOUTH SO I MUST SCREAM</Text>
-      <Text style={style.welcomeText}>Welcome {user}</Text>
+      <Text style={style.welcomeText}>Welcome {user} !</Text>
       {session ? (
         <View style={style.buttonContainer}>
           <Pressable
@@ -60,6 +60,7 @@ export default function Index() {
   );
 }
 
+// Style CSS
 const style = StyleSheet.create({
   background: {
     flex: 1,
@@ -106,7 +107,7 @@ const style = StyleSheet.create({
   },
   welcomeText: {
     fontSize: 20,
-    color: "white"
+    color: "yellowgreen"
   },
   buttonContainer: {
     margin: "5%",

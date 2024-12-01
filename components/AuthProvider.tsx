@@ -42,7 +42,7 @@ export function useAuth() {
 // Provider des informations de la session
 export function SessionProvider({ children }: PropsWithChildren) {
   const [[sessionIsLoading, session], setSession] = useStorageState("session");
-  const [[userIsLoading, user], setUser] = useStorageState("user");
+  const [[userIsLoading, user], setUser] = useStorageState("");
 
   // Rendu composants
   return (

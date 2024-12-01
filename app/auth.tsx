@@ -38,7 +38,7 @@ export default function AuthScreen() {
 
   // Rendu composants
   return (
-    <View style={styles.container}>
+    <View style={styles.background}>
       <Pressable onPress={() => router.replace("/")} style={styles.return}>
         <Text style={styles.returnText}>Retour</Text>
       </Pressable>
@@ -57,7 +57,10 @@ export default function AuthScreen() {
         style={styles.input}
       />
       {!firstTime ? (
-        <Button title="Connexion" onPress={() => handleLogin(username, password)} />
+        <Button
+          title="Connexion"
+          onPress={() => handleLogin(username, password)}
+        />
       ) : (
         <>
           <TextInput
@@ -90,27 +93,43 @@ export default function AuthScreen() {
 
 // Style CSS
 const styles = StyleSheet.create({
-  container: {
+  background: {
+    flex: 1,
+    alignItems: "center",
+    backgroundColor: "black",
     fontFamily: "Arial, sans-serif",
-    backgroundColor: "#f0f4f8",
     display: "flex",
     justifyContent: "center",
-    alignItems: "center",
     height: "100%",
   },
   title: {
-    color: "black",
+    fontSize: 40,
+    textAlign: "center",
+    justifyContent: "center",
+    margin: "5%",
+    marginBottom: 10,
+    color: "white",
     fontWeight: "bold",
-    fontSize: 30,
-    marginBottom: 20,
+  },
+  button: {
+    padding: 10,
+    margin: 5,
+    borderColor: "white",
+    backgroundColor: "black",
+    borderStyle: "solid",
+    borderWidth: 2,
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
   },
   input: {
     marginBottom: 20,
     fontStyle: "italic",
-    borderColor: "#4fbeda",
+    borderColor: "white",
     borderWidth: 1,
     borderRadius: 10,
     padding: 10,
+    color: "white"
   },
   return: {
     position: "absolute",
