@@ -52,7 +52,7 @@ export default function ScoreScreen() {
   return (
     <View style={styles.container}>
       <Pressable onPress={() => router.replace("/")} style={styles.return}>
-        <Text style={styles.returnText}>Retour</Text>
+        <Text style={styles.returnText}>Back</Text>
       </Pressable>
       <Text style={styles.title}>- SCORES -</Text>
       <View style={styles.table}>
@@ -61,13 +61,15 @@ export default function ScoreScreen() {
           <Text style={[styles.cell, styles.header]}>Nom</Text>
           <Text style={[styles.cell, styles.header]}>Score</Text>
         </View>
-        {scores.map((user, index) => (
-          <View key={user.id} style={styles.row}>
-            <Text style={styles.cell}>{index + 1}</Text>
-            <Text style={styles.cell}>{user.username}</Text>
-            <Text style={styles.cell}>{user.highestScore}</Text>
-          </View>
-        ))}
+        <ScrollView contentContainerStyle={styles.rows}>
+          {scores.splice(0, 10).map((user, index) => (
+            <View key={user.id} style={styles.row}>
+              <Text style={styles.cell}>{index + 1}</Text>
+              <Text style={styles.cell}>{user.username}</Text>
+              <Text style={styles.cell}>{user.highestScore}</Text>
+            </View>
+          ))}
+        </ScrollView>
       </View>
     </View>
   )
@@ -76,17 +78,16 @@ export default function ScoreScreen() {
 // Style CSS
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
-    backgroundColor: "#f9f9f9",
+    backgroundColor: "black",
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
   },
   title: {
-    color: "#333",
+    color: "white",
     fontWeight: "bold",
     fontSize: 24,
-    marginBottom: 20,
+    paddingBottom: 20
   },
   loadingText: {
     fontSize: 16,
@@ -102,11 +103,15 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     overflow: "hidden",
     backgroundColor: "#fff",
+    height: "100%"
+
   },
   row: {
     flexDirection: "row",
-    borderBottomWidth: 1,
     borderBottomColor: "#ddd",
+  },
+  rows: {
+    height: "100%"
   },
   cell: {
     flex: 1,
