@@ -21,7 +21,11 @@ export default function ScoreScreen() {
 
   // Chargement de la page
   if (isLoading) {
-    return <Text>Chargement des scores...</Text>
+    return (
+      <View style={styles.background}>
+        <Text style={styles.loadingText}>Chargement des scores...</Text>
+      </View>
+    )
   }
 
   // Récupération des scores utilisateurs
@@ -49,35 +53,36 @@ export default function ScoreScreen() {
 
   // Rendu composants
   return (
+    <>
     <View style={styles.background}>
-      <Pressable onPress={() => router.replace("/")} style={styles.return}>
-        <Text style={styles.returnText}>Back</Text>
-      </Pressable>
-      <Text style={styles.title}>- SCORES -</Text>
-      <View style={styles.table}>
-        <View style={styles.row}>
-          <Text style={[styles.cell, styles.header]}>#</Text>
-          <Text style={[styles.cell, styles.header]}>Nom</Text>
-          <Text style={[styles.cell, styles.header]}>Score</Text>
+        <View style={styles.table}>
+          <View style={styles.row}>
+            <Text style={[styles.cell, styles.header]}>#</Text>
+            <Text style={[styles.cell, styles.header]}>Nom</Text>
+            <Text style={[styles.cell, styles.header]}>Score</Text>
+          </View>
+          <ScrollView>
+            {scores.splice(0, 10).map((user, index) => (
+              <View key={user.id} style={styles.row}>
+                <Text style={styles.cell}>{index + 1}</Text>
+                <Text style={styles.cell}>{user.username}</Text>
+                <Text style={styles.cell}>{user.highestScore}</Text>
+              </View>
+            ))}
+          </ScrollView>
         </View>
-        <ScrollView contentContainerStyle={styles.rows}>
-          {scores.splice(0, 10).map((user, index) => (
-            <View key={user.id} style={styles.row}>
-              <Text style={styles.cell}>{index + 1}</Text>
-              <Text style={styles.cell}>{user.username}</Text>
-              <Text style={styles.cell}>{user.highestScore}</Text>
-            </View>
-          ))}
-        </ScrollView>
-      </View>
     </View>
+    <Pressable onPress={() => router.replace("/")} style={styles.return}>
+      <Text style={styles.returnText}>Back</Text>
+    </Pressable>
+    </>
   );
 }
 
 // Style CSS
 const styles = StyleSheet.create({
   background: {
-    flex: 1,
+    height: "100%",
     alignItems: "center",
     backgroundColor: "black",
     fontFamily: "Arial, sans-serif",
@@ -88,7 +93,6 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
     fontSize: 24,
-    paddingBottom: 20
   },
   loadingText: {
     fontSize: 16,
@@ -99,25 +103,22 @@ const styles = StyleSheet.create({
   table: {
     width: "100%",
     maxWidth: 400,
-    borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 8,
-    overflow: "hidden",
-    backgroundColor: "#fff",
+    height: "90%"
   },
   row: {
+    display: "flex",
+    width: "100%",
     flexDirection: "row",
-    borderBottomColor: "#ddd"
-  },
-  rows: {
-    height: "100%"
+    backgroundColor: "#fff"
   },
   cell: {
     flex: 1,
-    padding: 10,
-    textAlign: "center",
+    height: 35,
+    display: "flex",
     color: "#333",
-    fontSize: 16
+    fontSize: 16,
+    textAlignVertical: "center",
+    textAlign: "center"
   },
   header: {
     backgroundColor: "#f0f0f0",
@@ -140,5 +141,5 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     letterSpacing: 0.3,
     color: "white"
-  }
+  },
 });

@@ -42,7 +42,7 @@ export function useAuth() {
 // Provider des informations de la session
 export function SessionProvider({ children }: PropsWithChildren) {
   const [[sessionIsLoading, session], setSession] = useStorageState("session");
-  const [[userIsLoading, user], setUser] = useStorageState("");
+  const [[userIsLoading, user], setUser] = useStorageState("user");
 
   // Rendu composants
   return (
@@ -72,12 +72,8 @@ export function SessionProvider({ children }: PropsWithChildren) {
         },
         // Déconnexion
         signOut: () => {
-          if (session) {
-            setSession(null);
-          } else {
-            Alert.alert("Impossible de se déconnecter : aucune session active");
-            return;
-          }
+          setUser(null);
+          setSession(null);
         },
         // Inscription
         register: async (username, password): Promise<boolean> => {

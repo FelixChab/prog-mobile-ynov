@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Text, TextInput, Button, StyleSheet, View, Pressable } from "react-native";
+import { Text, TextInput, Button, StyleSheet, View } from "react-native";
 import { Alert } from "react-native";
 import { router } from "expo-router";
 import { useAuth } from "../components/AuthProvider";
@@ -39,15 +39,13 @@ export default function AuthScreen() {
   // Rendu composants
   return (
     <View style={styles.background}>
-      <Pressable onPress={() => router.replace("/")} style={styles.return}>
-        <Text style={styles.returnText}>Retour</Text>
-      </Pressable>
-      <Text style={styles.title}>Authentification</Text>
+      <Text style={styles.title}>Authentication</Text>
       <TextInput
         placeholder="Nom d'utilisateur"
         value={username}
         onChangeText={setUsername}
         style={styles.input}
+        placeholderTextColor={"#999"}
       />
       <TextInput
         placeholder="Mot de passe"
@@ -55,6 +53,7 @@ export default function AuthScreen() {
         onChangeText={setPassword}
         secureTextEntry
         style={styles.input}
+        placeholderTextColor={"#999"}
       />
       {!firstTime ? (
         <Button
@@ -69,6 +68,7 @@ export default function AuthScreen() {
             onChangeText={setConfirmPassword}
             secureTextEntry
             style={styles.input}
+            placeholderTextColor={"#999"}
           />
           <Button
             title="Inscription"
@@ -129,7 +129,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
     padding: 10,
-    color: "white"
+    color: "white",
+    width: "40%"
   },
   return: {
     position: "absolute",

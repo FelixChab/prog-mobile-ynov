@@ -15,9 +15,12 @@ import { collection, getDocs, query, updateDoc, where } from "firebase/firestore
 import { db } from "../../config/useFirebase";
 import { useLaser } from "@/hooks/useLaser";
 import LaserComponent from "./LaserComponent";
+import { useAuth } from "../AuthProvider";
 
 
 export default function GameComponent() {
+  const { user } = useAuth();
+
   // sound capture managment
   let amplitude = -100
 
@@ -68,12 +71,11 @@ export default function GameComponent() {
     }
   }
 
-  // Gestion de game over
+  // game over managment
   useEffect(() => {
     if (playerY > height || laser.getRight() > player.getLeft()) {
       if (gameLoop) gameLoop.stop();
-      // TODO: récup nom joueur pour mettre à jour son score
-      updateHighScore("todo", score);
+      if (user) updateHighScore(user, score);
       router.replace({ pathname: "/gameover", params: { score } });
     }
   }, [laserX]);
@@ -82,24 +84,21 @@ export default function GameComponent() {
     setScore(Math.floor((playerX - PLAYER_OFFSET) * SCORE_MULT));
   }, [playerX]);
 
-  // Gestion du meilleur score
+  // best score managment
   const updateHighScore = async (username: string, newScore: number) => {
     try {
       const dbUsers = collection(db, "Users")
       const q = query(dbUsers, where("username", "==", username.toLowerCase()));
       const doc = await getDocs(q)
-      // Si on obtient un résultat
+
       if (!doc.empty) {
-        const userDoc = doc.docs[0]; // Premier résultat correspondant à la requête précèdente
+        const userDoc = doc.docs[0]; // index 0 is the result returned by the previous query
         const userData = userDoc.data();
-        // On vérifie le nouveau score
         if (newScore > (userData.highestScore)) {
           await updateDoc(userDoc.ref, {
             highestScore: newScore
           });
           Alert.alert("Nouveau record ! Score mis à jour.");
-        } else {
-          Alert.alert("Utilisateur introuvable.");
         }
       }
     } catch (error) {

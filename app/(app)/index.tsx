@@ -1,12 +1,12 @@
 import { Button, Pressable, Text, View } from "react-native"
 import { useAuth } from "../../components/AuthProvider"
-import { router } from "expo-router";
+import { Redirect, router } from "expo-router";
 import { useStorageState } from "../../hooks/useStorageState";
-import React from "react";
+import React, { useEffect } from "react";
 import { StyleSheet } from "react-native";
 
 export default function Index() {
-  const [session, setSession] = useStorageState("");
+  const [session, setSession] = useStorageState("session");
   const { signOut, user } = useAuth();
 
   // Gestion de la déconnexion
@@ -19,43 +19,30 @@ export default function Index() {
   // Rendu composants page
   return (
     <View style={style.background}>
+      {(!user || user == "false") && <Redirect href={"/auth"} />}
       <Text style={style.title}>I HAVE A MOUTH SO I MUST SCREAM</Text>
       <Text style={style.welcomeText}>Welcome {user} !</Text>
-      {session ? (
-        <View style={style.buttonContainer}>
-          <Pressable
-            onPress={() => {
-              router.replace("/game");
-            }}
-            style={style.button}
-          >
-            <Text style={style.buttonText}>Play</Text>
-          </Pressable>
-          <Pressable
-            onPress={() => {
-              router.replace("/leaderboard");
-            }}
-            style={style.button}
-          >
-            <Text style={style.buttonText}>Leaderboard</Text>
-          </Pressable>
-          <Pressable style={style.logoutButton} onPress={() => { handleSignOut()}}>
-            <Text style={style.logoutButtonText}>Log out</Text>
-          </Pressable>
-        </View>
-      ) : (
-        <>
-          <Text style={{ color: "red", marginBottom: 10 }}>
-            Vous n'êtes pas connecté, veuillez vous authentifier :
-          </Text>
-          <Button
-            title="Authentification"
-            onPress={() => {
-              router.replace("/auth")
-            }}
-          />
-        </>
-      )}
+      <View style={style.buttonContainer}>
+        <Pressable
+          onPress={() => {
+            router.replace("/game");
+          }}
+          style={style.button}
+        >
+          <Text style={style.buttonText}>Play</Text>
+        </Pressable>
+        <Pressable
+          onPress={() => {
+            router.replace("/leaderboard");
+          }}
+          style={style.button}
+        >
+          <Text style={style.buttonText}>Leaderboard</Text>
+        </Pressable>
+        <Pressable style={style.logoutButton} onPress={() => { handleSignOut()}}>
+          <Text style={style.logoutButtonText}>Log out</Text>
+        </Pressable>
+      </View>
     </View>
   );
 }
