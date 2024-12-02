@@ -1,12 +1,32 @@
-# PROGRAMMATION MOBILE
-Dans le cadre du cours de Programmation Mobile à Ynov en M2 nous avons réalisé une application pour iOS / Android
-à l'aide de React Native & Expo Go. Le présent repository contient tous les fichiers de l'app.
+# INTRODUCTION
+This application was made as a study project during the mobile application module. We had to use React Native as our framework.
+We choose to create a mini-game using sound to control the character.
 
-# MEMBRES
+# MEMBERS
 
 - Félix CHABELLARD
-- Dorian VIDAL
+- Dorian LEVÉE
 
-# L'APPLICATION
+# SPECIFICATIONS
 
-Jeu mobile consistant à déplacer un personne de gauche à droite en évitant les obstacles à l'aide du volume du microphone. (?)
+## Authentification 
+- [x] user account registration
+- [x] log in
+- [ ] user account modification
+
+## Game
+- [x] character should be able to walk when speaking softly
+- [x] character should be able to jump when speaking loudly
+- [x] traps on the way (currently holes only)
+- [x] distance based score
+- [x] laser pursuing player
+
+## Leaderboard
+- [x] score upload
+- [ ] top 10 personnal best scores
+- [x] top 10 world best scores
+
+# Warnings
+- This project has not been tested on an IOS phone yet.
+- It doesn't works on browser because of the audio capture package we use
+- expo go is not compatible, you should use [development builds](https://docs.expo.dev/develop/development-builds/introduction/)
