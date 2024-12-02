@@ -30,4 +30,4 @@ We choose to create a mini-game using sound to control the character.
 - This project has not been tested on an IOS phone yet.
 - It doesn't works on browser because of the audio capture package we use
 - expo go is not compatible, you should use [development builds](https://docs.expo.dev/develop/development-builds/introduction/)
-- To register a new account you must failed intentionally to connect to an account first
+- To register a new account you must failed intentionally to log in to an account first
