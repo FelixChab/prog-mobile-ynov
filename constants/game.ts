@@ -1,14 +1,14 @@
 // player
 export const MAX_SPEED = 25;
 export const JUMP_FORCE = -15;
-export const ACCELERATION = 0.15;
-export const DECELERATION = -0.1;
+export const ACCELERATION = 0.1;
+export const DECELERATION = -0.2;
 export const PLAYER_SIZE = 40;
 export const PLAYER_OFFSET = 300;
 export const SCORE_MULT = 0.005
 
 // sound
-export const SOUND_LEVEL_CAP_TO_JUMP = -15;
+export const SOUND_LEVEL_CAP_TO_JUMP = -10;
 export const SOUND_LEVEL_CAP_TO_WALK = -50;
 
 // environment

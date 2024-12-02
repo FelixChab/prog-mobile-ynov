@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Text, TextInput, Button, StyleSheet, View, Pressable } from "react-native";
+import { Text, TextInput, Button, StyleSheet, View } from "react-native";
 import { Alert } from "react-native";
 import { router } from "expo-router";
 import { useAuth } from "../components/AuthProvider";
@@ -38,16 +38,14 @@ export default function AuthScreen() {
 
   // Rendu composants
   return (
-    <View style={styles.container}>
-      <Pressable onPress={() => router.replace("/")} style={styles.return}>
-        <Text style={styles.returnText}>Retour</Text>
-      </Pressable>
-      <Text style={styles.title}>Authentification</Text>
+    <View style={styles.background}>
+      <Text style={styles.title}>Authentication</Text>
       <TextInput
         placeholder="Nom d'utilisateur"
         value={username}
         onChangeText={setUsername}
         style={styles.input}
+        placeholderTextColor={"#999"}
       />
       <TextInput
         placeholder="Mot de passe"
@@ -55,9 +53,13 @@ export default function AuthScreen() {
         onChangeText={setPassword}
         secureTextEntry
         style={styles.input}
+        placeholderTextColor={"#999"}
       />
       {!firstTime ? (
-        <Button title="Connexion" onPress={() => handleLogin(username, password)} />
+        <Button
+          title="Connexion"
+          onPress={() => handleLogin(username, password)}
+        />
       ) : (
         <>
           <TextInput
@@ -66,6 +68,7 @@ export default function AuthScreen() {
             onChangeText={setConfirmPassword}
             secureTextEntry
             style={styles.input}
+            placeholderTextColor={"#999"}
           />
           <Button
             title="Inscription"
@@ -90,27 +93,44 @@ export default function AuthScreen() {
 
 // Style CSS
 const styles = StyleSheet.create({
-  container: {
+  background: {
+    flex: 1,
+    alignItems: "center",
+    backgroundColor: "black",
     fontFamily: "Arial, sans-serif",
-    backgroundColor: "#f0f4f8",
     display: "flex",
     justifyContent: "center",
-    alignItems: "center",
     height: "100%",
   },
   title: {
-    color: "black",
+    fontSize: 40,
+    textAlign: "center",
+    justifyContent: "center",
+    margin: "5%",
+    marginBottom: 10,
+    color: "white",
     fontWeight: "bold",
-    fontSize: 30,
-    marginBottom: 20,
+  },
+  button: {
+    padding: 10,
+    margin: 5,
+    borderColor: "white",
+    backgroundColor: "black",
+    borderStyle: "solid",
+    borderWidth: 2,
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
   },
   input: {
     marginBottom: 20,
     fontStyle: "italic",
-    borderColor: "#4fbeda",
+    borderColor: "white",
     borderWidth: 1,
     borderRadius: 10,
     padding: 10,
+    color: "white",
+    width: "40%"
   },
   return: {
     position: "absolute",

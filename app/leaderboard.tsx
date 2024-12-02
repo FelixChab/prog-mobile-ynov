@@ -21,7 +21,11 @@ export default function ScoreScreen() {
 
   // Chargement de la page
   if (isLoading) {
-    return <Text>Chargement des scores...</Text>
+    return (
+      <View style={styles.background}>
+        <Text style={styles.loadingText}>Chargement des scores...</Text>
+      </View>
+    )
   }
 
   // Récupération des scores utilisateurs
@@ -32,13 +36,12 @@ export default function ScoreScreen() {
         orderBy("highestScore", "desc")
       );
       const q = await getDocs(dbScores);
-
       const highestScores = q.docs.map((doc) => {
         const userData = doc.data();
         return {
           id: doc.id, // ID unique Firestore
           username: userData.username,
-          highestScore: userData.highestScore,
+          highestScore: userData.highestScore
         }
       });
       return highestScores;
@@ -50,74 +53,76 @@ export default function ScoreScreen() {
 
   // Rendu composants
   return (
-    <View style={styles.container}>
-      <Pressable onPress={() => router.replace("/")} style={styles.return}>
-        <Text style={styles.returnText}>Retour</Text>
-      </Pressable>
-      <Text style={styles.title}>- SCORES -</Text>
-      <View style={styles.table}>
-        <View style={styles.row}>
-          <Text style={[styles.cell, styles.header]}>#</Text>
-          <Text style={[styles.cell, styles.header]}>Nom</Text>
-          <Text style={[styles.cell, styles.header]}>Score</Text>
-        </View>
-        {scores.map((user, index) => (
-          <View key={user.id} style={styles.row}>
-            <Text style={styles.cell}>{index + 1}</Text>
-            <Text style={styles.cell}>{user.username}</Text>
-            <Text style={styles.cell}>{user.highestScore}</Text>
+    <>
+    <View style={styles.background}>
+        <View style={styles.table}>
+          <View style={styles.row}>
+            <Text style={[styles.cell, styles.header]}>#</Text>
+            <Text style={[styles.cell, styles.header]}>Nom</Text>
+            <Text style={[styles.cell, styles.header]}>Score</Text>
           </View>
-        ))}
-      </View>
+          <ScrollView>
+            {scores.splice(0, 10).map((user, index) => (
+              <View key={user.id} style={styles.row}>
+                <Text style={styles.cell}>{index + 1}</Text>
+                <Text style={styles.cell}>{user.username}</Text>
+                <Text style={styles.cell}>{user.highestScore}</Text>
+              </View>
+            ))}
+          </ScrollView>
+        </View>
     </View>
-  )
+    <Pressable onPress={() => router.replace("/")} style={styles.return}>
+      <Text style={styles.returnText}>Back</Text>
+    </Pressable>
+    </>
+  );
 }
 
 // Style CSS
 const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
-    backgroundColor: "#f9f9f9",
-    justifyContent: "center",
+  background: {
+    height: "100%",
     alignItems: "center",
-    padding: 20,
+    backgroundColor: "black",
+    fontFamily: "Arial, sans-serif",
+    display: "flex",
+    justifyContent: "center"
   },
   title: {
-    color: "#333",
+    color: "white",
     fontWeight: "bold",
     fontSize: 24,
-    marginBottom: 20,
   },
   loadingText: {
     fontSize: 16,
     color: "#666",
     textAlign: "center",
-    marginTop: 50,
+    marginTop: 50
   },
   table: {
     width: "100%",
     maxWidth: 400,
-    borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 8,
-    overflow: "hidden",
-    backgroundColor: "#fff",
+    height: "90%"
   },
   row: {
+    display: "flex",
+    width: "100%",
     flexDirection: "row",
-    borderBottomWidth: 1,
-    borderBottomColor: "#ddd",
+    backgroundColor: "#fff"
   },
   cell: {
     flex: 1,
-    padding: 10,
-    textAlign: "center",
+    height: 35,
+    display: "flex",
     color: "#333",
     fontSize: 16,
+    textAlignVertical: "center",
+    textAlign: "center"
   },
   header: {
     backgroundColor: "#f0f0f0",
-    fontWeight: "bold",
+    fontWeight: "bold"
   },
   return: {
     position: "absolute",
@@ -128,13 +133,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     elevation: 3,
     backgroundColor: "black",
-    borderRadius: 1,
+    borderRadius: 1
   },
   returnText: {
     fontSize: 16,
     lineHeight: 20,
     fontWeight: "bold",
     letterSpacing: 0.3,
-    color: "white",
-  }
-})
+    color: "white"
+  },
+});

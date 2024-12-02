@@ -11,10 +11,14 @@ export default function gameOver() {
 	return (
     <View style={styles.container}>
       <Text style={styles.score}>Score: {score}</Text>
-      <Button onPress={onRestartPress} title="Restart a new game"></Button>
-      <Pressable onPress={() => router.replace("/")} style={styles.return}>
-        <Text style={styles.returnText}>Retour</Text>
-      </Pressable>
+      <View style={styles.buttonContainer}>
+        <Pressable style={styles.newGame} onPress={onRestartPress}>
+            <Text style={styles.newGameText}>Restart a new game</Text>
+        </Pressable>
+        <Pressable onPress={() => router.replace("/")} style={styles.return}>
+            <Text style={styles.returnText}>Title screen</Text>
+        </Pressable>
+      </View>
     </View>
   )
 }
@@ -22,30 +26,50 @@ export default function gameOver() {
 // Style CSS
 const styles = StyleSheet.create({
     container: {
+        backgroundColor: "black",
         display: "flex",
         alignItems: "center",
-        gap: 80
+        justifyContent: "center",
+        gap: 10,
+        height: "100%",
     },
     score: {
         fontSize: 80,
-        fontWeight: "900"
+        fontWeight: "900",
+        color: "white"
+    },
+    buttonContainer: {
+        margin: "5%",
+        width: "40%",
+        display: "flex"
+    },
+    newGame: {
+        padding: 10,
+        margin: 5,
+        borderColor: "white",
+        backgroundColor: "black",
+        borderStyle: "solid",
+        borderWidth: 2,
+        width: "100%",
+        display: "flex",
+        alignItems: "center"
+    },
+    newGameText: {
+        fontWeight: 800,
+        fontSize: 20,
+        color: "white"
     },
     return: {
-        position: "absolute",
-        top: 0,
-        left: 0,
-        marginBottom: 10,
-        paddingVertical: 10,
-        paddingHorizontal: 24,
-        elevation: 3,
-        backgroundColor: "black",
-        borderRadius: 1,
+        padding: 10,
+        margin: 5,
+        backgroundColor: "white",
+        width: "100%",
+        display: "flex",
+        alignItems: "center"
     },
     returnText: {
-        fontSize: 16,
-        lineHeight: 20,
-        fontWeight: "bold",
-        letterSpacing: 0.3,
-        color: "white",
+        fontWeight: 800,
+        fontSize: 20,
+        color: "black"
     }
 });

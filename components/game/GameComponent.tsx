@@ -11,13 +11,16 @@ import { Wall } from "@/engine/game-objects/wall";
 import { useGround } from "@/hooks/useGround";
 import { AudioModule } from "expo-audio";
 import { router } from "expo-router";
-import { collection, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
+import { collection, getDocs, query, updateDoc, where } from "firebase/firestore";
 import { db } from "../../config/useFirebase";
 import { useLaser } from "@/hooks/useLaser";
 import LaserComponent from "./LaserComponent";
+import { useAuth } from "../AuthProvider";
 
 
 export default function GameComponent() {
+  const { user } = useAuth();
+
   // sound capture managment
   let amplitude = -100
 
@@ -45,7 +48,7 @@ export default function GameComponent() {
     y: 250,
     size: PLAYER_SIZE,
   })
-  const [laser, laserX] = useLaser({id: 0, x: LASER_STARTING_X});
+  const [laser, laserX] = useLaser({ id: 0, x: LASER_STARTING_X })
   const groundPlatform = useGround({ playerX, renderingDistance: 500 })
   const gameObjects: GameObject[] = [player, laser]
   const [score, setScore] = useState(0)
@@ -68,65 +71,71 @@ export default function GameComponent() {
     }
   }
 
-	// Gestion de game over
-	useEffect(() => {
-		if (playerY > height || laser.getRight() > player.getLeft()) {
+  // game over managment
+  useEffect(() => {
+    if (playerY > height || laser.getRight() > player.getLeft()) {
       if (gameLoop) gameLoop.stop();
-			//updateHighScore();
-			router.replace({ pathname: "/gameover", params: { score } });
-		}
-	}, [laserX]);
+      if (user) updateHighScore(user, score);
+      router.replace({ pathname: "/gameover", params: { score } });
+    }
+  }, [laserX]);
 
   useEffect(() => {
-    setScore(Math.floor((playerX - PLAYER_OFFSET) * SCORE_MULT))
-  }, [playerX])
+    setScore(Math.floor((playerX - PLAYER_OFFSET) * SCORE_MULT));
+  }, [playerX]);
 
+  // best score managment
+  const updateHighScore = async (username: string, newScore: number) => {
+    try {
+      const dbUsers = collection(db, "Users")
+      const q = query(dbUsers, where("username", "==", username.toLowerCase()));
+      const doc = await getDocs(q)
+
+      if (!doc.empty) {
+        const userDoc = doc.docs[0]; // index 0 is the result returned by the previous query
+        const userData = userDoc.data();
+        if (newScore > (userData.highestScore)) {
+          await updateDoc(userDoc.ref, {
+            highestScore: newScore
+          });
+          Alert.alert("Nouveau record ! Score mis à jour.");
+        }
+      }
+    } catch (error) {
+      Alert.alert("Erreur: " + error);
+    }
+  }
+
+  // Style CSS
   const style = StyleSheet.create({
     background: {
       backgroundColor: "black",
       width,
-      height,
+      height
     },
     score: {
       fontSize: 30,
       position: "absolute",
-      color: "white",
+      color: "white"
     },
     gameOverOverlay: {
       backgroundColor: "black",
       width,
-      height,
+      height
     },
     scoreGameOver: {
       fontSize: 50,
       position: "absolute",
-      color: "white",
+      color: "white"
     },
     display: {
       display: "flex",
       top: 100,
-      bottom: 100,
-    },
-  })
+      bottom: 100
+    }
+  });
 
-  // Gestion du meilleur score
-  const updateHighScore = async (username: string, newScore: number) => {
-		try {
-			const dbUsers = collection(db, "Users");
-			const q = query(dbUsers, where("username", "==", username.toLowerCase()));
-			const doc = await getDocs(q);
-			// Vérifier si l'utilisateur existe déjà
-			if (!doc.empty) {
-				if (newScore > 1) {
-					// TODO: score
-				}
-			}
-		} catch (error) {
-			Alert.alert("Erreur: " + error);
-		}
-	}
-	
-	// Rendu composants
+  // Rendu composants
   return (
     <View style={style.background}>
       {<Text style={style.score}>Score: {score}</Text>}
@@ -145,7 +154,7 @@ export default function GameComponent() {
             />
           )
         })}
-        <LaserComponent x={laserX} playerX={playerX}/>
+      <LaserComponent x={laserX} playerX={playerX} />
     </View>
   )
 }

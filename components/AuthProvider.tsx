@@ -3,7 +3,6 @@ import { useStorageState } from "@/hooks/useStorageState";
 import { db } from "@/config/useFirebase";
 import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
 import { Alert } from "react-native";
-import { router } from "expo-router";
 
 interface User {
   id: string,
@@ -18,12 +17,14 @@ const AuthContext = createContext<{
   signOut: () => void
   register: (username: string, password: string) => Promise<boolean>
   session?: string | null
+  user?: string | null
   isLoading: boolean
 }>({
   signIn: async () => false,
   signOut: () => null,
   register: async () => false,
   session: null,
+  user: null,
   isLoading: false,
 })
 
@@ -40,7 +41,8 @@ export function useAuth() {
 
 // Provider des informations de la session
 export function SessionProvider({ children }: PropsWithChildren) {
-  const [[isLoading, session], setSession] = useStorageState("");
+  const [[sessionIsLoading, session], setSession] = useStorageState("session");
+  const [[userIsLoading, user], setUser] = useStorageState("user");
 
   // Rendu composants
   return (
@@ -57,7 +59,8 @@ export function SessionProvider({ children }: PropsWithChildren) {
             // L'utilisateur existe dans Firestore
             if (!doc.empty) {
               const userData = doc.docs[0].data() as User;
-              setSession(userData.id);
+              setSession(userData.id)
+              setUser(username);
               return true;
             } else {
               return false;
@@ -69,12 +72,8 @@ export function SessionProvider({ children }: PropsWithChildren) {
         },
         // Déconnexion
         signOut: () => {
-          if (session) {
-            setSession(null);
-          } else {
-            Alert.alert("Impossible de se déconnecter : aucune session active");
-            return;
-          }
+          setUser(null);
+          setSession(null);
         },
         // Inscription
         register: async (username, password): Promise<boolean> => {
@@ -105,7 +104,8 @@ export function SessionProvider({ children }: PropsWithChildren) {
            }
         },
         session,
-        isLoading
+        user,
+        isLoading: sessionIsLoading && userIsLoading
       }}
     >
       {children}
